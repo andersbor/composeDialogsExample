@@ -7,6 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -45,6 +47,7 @@ import androidx.compose.ui.window.Dialog
 import com.example.dialogsexample.ui.theme.DialogsExampleTheme
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalLayoutApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -57,15 +60,15 @@ class MainActivity : ComponentActivity() {
                         var openImageDialog by remember { mutableStateOf(false) }
                         var openAuthDialog by rememberSaveable { mutableStateOf(false) }
 
-                        Row {
+                        // https://developer.android.com/develop/ui/compose/layouts/flow
+                        FlowRow {
                             Button(onClick = { openAlertDialog = true }) {
                                 Text("Alert Dialog")
                             }
                             Button(onClick = { openMinimalDialog = true }) {
                                 Text("Minimal Dialog")
                             }
-                        }
-                        Row {
+
                             Button(onClick = { openImageDialog = true }) {
                                 Text("Dialog with Image")
                             }
@@ -104,15 +107,16 @@ class MainActivity : ComponentActivity() {
                                 message = "Wrong email or password"
                             }
                         }
+
+                        fun signUp(email: String, password: String) {
+                            message = "Sign up not implemented"
+                            openAuthDialog = false
+                        }
                         if (openAuthDialog) {
                             AuthDialog(
-                                onSignIn = { email, password ->
-                                    checkEmailPassword(
-                                        email,
-                                        password
-                                    )
-                                },
-                                onSignUp = { openAuthDialog = false },
+                                onSignIn = ::checkEmailPassword,
+                                // https://kotlinlang.org/docs/reflection.html#function-references
+                                onSignUp = ::signUp,
                                 onCancel = { openAuthDialog = false },
                                 message = message
                             )
@@ -225,7 +229,7 @@ fun DialogWithImage(
 @Composable
 fun AuthDialog(
     onSignIn: (email: String, password: String) -> Unit,
-    onSignUp: () -> Unit = {},
+    onSignUp: (email: String, password: String) -> Unit = { _: String, _: String -> },
     onCancel: () -> Unit = { },
     message: String = "",
 ) {
@@ -265,7 +269,7 @@ fun AuthDialog(
                 Button(onClick = { onSignIn(email, password) }) {
                     Text("Sign in")
                 }
-                Button(onClick = onSignUp) {
+                Button(onClick = { onSignUp(email, password) }) {
                     Text("Sign up")
                 }
             }
