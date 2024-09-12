@@ -233,47 +233,49 @@ fun AuthDialog(
     onCancel: () -> Unit = { },
     message: String = "",
 ) {
-    Card(modifier = Modifier.padding(16.dp), shape = RoundedCornerShape(16.dp))
-    {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        )
+    Dialog(onDismissRequest = { onCancel() }) {
+        Card(shape = RoundedCornerShape(16.dp))
         {
-            var email by remember { mutableStateOf("") }
-            var password by remember { mutableStateOf("") }
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = email,
-                onValueChange = { email = it },
-                label = { Text("Email") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+            Column(
+               modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
             )
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = password,
-                onValueChange = { password = it },
-                label = { Text("Password") },
-                // https://alitalhacoban.medium.com/show-hide-password-jetpack-compose-d0c4abac568f
-                visualTransformation = PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-            ) {
-                Button(onClick = onCancel) {
-                    Text("Cancel")
+            {
+                var email by remember { mutableStateOf("") }
+                var password by remember { mutableStateOf("") }
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = email,
+                    onValueChange = { email = it },
+                    label = { Text("Email") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                )
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = password,
+                    onValueChange = { password = it },
+                    label = { Text("Password") },
+                    // https://alitalhacoban.medium.com/show-hide-password-jetpack-compose-d0c4abac568f
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                ) {
+                    Button(onClick = onCancel) {
+                        Text("Cancel")
+                    }
+                    Button(onClick = { onSignIn(email, password) }) {
+                        Text("Sign in")
+                    }
+                    Button(onClick = { onSignUp(email, password) }) {
+                        Text("Sign up")
+                    }
                 }
-                Button(onClick = { onSignIn(email, password) }) {
-                    Text("Sign in")
-                }
-                Button(onClick = { onSignUp(email, password) }) {
-                    Text("Sign up")
-                }
+                Text(text = message)
             }
-            Text(text = message)
         }
     }
 }
