@@ -144,14 +144,12 @@ fun AlertDialogExample(
         text = { Text(text = dialogText) },
         onDismissRequest = { onDismissRequest() },
         confirmButton = {
-            TextButton(
-                onClick = { onConfirmation() }
-            ) { Text("Confirm") }
+            TextButton(onClick = { onConfirmation() })
+            { Text("Confirm") }
         },
         dismissButton = {
-            TextButton(
-                onClick = { onDismissRequest() }
-            ) { Text("Dismiss") }
+            TextButton(onClick = { onDismissRequest() })
+            { Text("Dismiss") }
         }
     )
 }
@@ -237,7 +235,7 @@ fun AuthDialog(
         Card(shape = RoundedCornerShape(16.dp))
         {
             Column(
-               modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(16.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             )
