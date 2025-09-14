@@ -53,76 +53,85 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             DialogsExampleTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Column(modifier = Modifier.padding(innerPadding)) {
-                        var openAlertDialog by remember { mutableStateOf(false) }
-                        var openMinimalDialog by remember { mutableStateOf(false) }
-                        var openImageDialog by remember { mutableStateOf(false) }
-                        var openAuthDialog by rememberSaveable { mutableStateOf(false) }
+                MainScreen()
+            }
+        }
+    }
+}
 
-                        // https://developer.android.com/develop/ui/compose/layouts/flow
-                        FlowRow {
-                            Button(onClick = { openAlertDialog = true }) {
-                                Text("Alert Dialog")
-                            }
-                            Button(onClick = { openMinimalDialog = true }) {
-                                Text("Minimal Dialog")
-                            }
+@Composable
+@OptIn(ExperimentalLayoutApi::class)
+private fun MainScreen() {
+    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+        Column(modifier = Modifier.padding(innerPadding)) {
+            var showAlertDialog by remember { mutableStateOf(false) }
+            var showMinimalDialog by remember { mutableStateOf(false) }
+            var showImageDialog by remember { mutableStateOf(false) }
+            var showAuthDialog by rememberSaveable { mutableStateOf(false) }
 
-                            Button(onClick = { openImageDialog = true }) {
-                                Text("Dialog with Image")
-                            }
-                            Button(onClick = { openAuthDialog = true }) {
-                                Text("Auth Dialog")
-                            }
-                        }
-
-                        if (openAlertDialog) {
-                            AlertDialogExample(
-                                onDismissRequest = { openAlertDialog = false },
-                                onConfirmation = { openAlertDialog = false },
-                                dialogTitle = "Dialog Title",
-                                dialogText = "Dialog Text",
-                                icon = Icons.Filled.AddCircle
-                            )
-                        }
-                        if (openMinimalDialog) {
-                            MinimalDialog(
-                                onDismissRequest = { openMinimalDialog = false }
-                            )
-                        }
-                        if (openImageDialog) {
-                            DialogWithImage(
-                                onDismissRequest = { openImageDialog = false },
-                                onConfirmation = { openImageDialog = false },
-                                painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                                imageDescription = "Example Image"
-                            )
-                        }
-                        var message by remember { mutableStateOf("") }
-                        fun checkEmailPassword(email: String, password: String) {
-                            if (email == "anbo@zealand.dk" && password == "secret12") {
-                                openAuthDialog = false
-                            } else {
-                                message = "Wrong email or password"
-                            }
-                        }
-
-                        fun signUp(email: String, password: String) {
-                            message = "Sign up not implemented"
-                            openAuthDialog = false
-                        }
-                        if (openAuthDialog) {
-                            AuthDialog(
-                                onSignIn = ::checkEmailPassword,
-                                // https://kotlinlang.org/docs/reflection.html#function-references
-                                onSignUp = ::signUp,
-                                onCancel = { openAuthDialog = false },
-                                message = message
-                            )
-                        }
-                    }
+            // https://developer.android.com/develop/ui/compose/layouts/flow
+            FlowRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                //maxItemsInEachRow = 2
+            ) {
+                Button(onClick = { showMinimalDialog = true }) {
+                    Text("Minimal Dialog")
                 }
+                Button(onClick = { showAlertDialog = true }) {
+                    Text("Alert Dialog")
+                }
+                Button(onClick = { showImageDialog = true }) {
+                    Text("Dialog with Image")
+                }
+                Button(onClick = { showAuthDialog = true }) {
+                    Text("Auth Dialog")
+                }
+            }
+
+            if (showAlertDialog) {
+                AlertDialogExample(
+                    onDismissRequest = { showAlertDialog = false },
+                    onConfirmation = { showAlertDialog = false },
+                    dialogTitle = "Dialog Title",
+                    dialogText = "Dialog Text",
+                    icon = Icons.Filled.AddCircle
+                )
+            }
+            if (showMinimalDialog) {
+                MinimalDialog(
+                    onDismissRequest = { showMinimalDialog = false }
+                )
+            }
+            if (showImageDialog) {
+                DialogWithImage(
+                    onDismissRequest = { showImageDialog = false },
+                    onConfirmation = { showImageDialog = false },
+                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                    imageDescription = "Example Image"
+                )
+            }
+            var message by remember { mutableStateOf("") }
+            fun checkEmailPassword(email: String, password: String) {
+                if (email == "anbo@zealand.dk" && password == "secret12") {
+                    showAuthDialog = false
+                } else {
+                    message = "Wrong email or password"
+                }
+            }
+
+            fun signUp(email: String, password: String) {
+                message = "Sign up not implemented"
+                showAuthDialog = false
+            }
+            if (showAuthDialog) {
+                AuthDialog(
+                    onSignIn = ::checkEmailPassword,
+                    // https://kotlinlang.org/docs/reflection.html#function-references
+                    onSignUp = ::signUp,
+                    onCancel = { showAuthDialog = false },
+                    message = message
+                )
             }
         }
     }
